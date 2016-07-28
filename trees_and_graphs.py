@@ -3,6 +3,8 @@
 # J. Plasmeier | jplasmeier@gmail.com
 # MIT License
 
+import Queue
+
 class TreeNode:
 
     def __init__(self, value, left, right):
@@ -53,6 +55,11 @@ class GraphNode:
                 except:
                     pass
 
+    def print_graph_breadth_first(self):
+        print self.value
+        q = Queue.Queue()
+
+
     def graph_to_list_closure(self,lst=[]):
         #Closure likely isn't needed but is this a violation of any practice/standard? 
         def graph_to_list_depth_first(node):
@@ -85,5 +92,5 @@ g3 = GraphNode(3, [g2])
 g4 = GraphNode(4, [g0])
 g5 = GraphNode(5, [g3, g4])
 g1.left = g5
-
-print g5.graph_to_list_closure([])
+print g5.print_graph_depth_first()
+#print g5.graph_to_list_closure([])
