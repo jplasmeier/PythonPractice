@@ -70,15 +70,11 @@ def racetrack(all_laps, trials):
             q.clear()
     return fastest
 
-
-
-
-
-
-all_laps = [random.random()*100 for x in range(0,100)]
+#all_laps = [random.random()*100 for x in range(0,100)]
 #all_laps = [100-x for x in range(0,100)]
 #all_laps = range(0,100)
-trials = 10
+all_laps = [6,7,5,3,2,5,6,7,8,9,1,2,2,5,3,7,9]
+trials = 3
 #print all_laps
 f = racetrack(all_laps, trials)
 print f

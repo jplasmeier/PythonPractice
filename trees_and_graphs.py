@@ -5,6 +5,18 @@
 
 import Queue
 
+def flatten_list(to_flat):
+    flat = []
+    if to_flat is None:
+        return []
+    for i in to_flat:
+        if isinstance(i, int):
+            flat.append(i)
+        elif isinstance(i, list):
+            flat.extend(flatten_list(i))
+    return flat
+
+
 class TreeNode:
 
     def __init__(self, value, left, right):
@@ -15,15 +27,59 @@ class TreeNode:
             self.right = right
         self.checked = False
 
-    def print_tree_preorder(self, offset=''):
-        print offset+str(self.value)
+    def print_tree_preorder(self):
+        print str(self.value)
         if hasattr(self, 'left'):
-            print offset+"|"
             self.left.print_tree_preorder()
         if hasattr(self, 'right'):
-            print offset+"    \\"
-            self.right.print_tree_preorder("    "+offset)
+            self.right.print_tree_preorder()
     
+    def flatten_tree_preorder(self):
+        lst = [self.value]
+        if hasattr(self, 'left'):
+            lst.append(self.left.flatten_tree_preorder())
+        if hasattr(self, 'right'):
+            lst.append(self.right.flatten_tree_preorder())
+        return lst
+
+    def flatten_tree_inorder(self):
+        lst = []
+        if hasattr(self, 'left'):
+            lst.append(self.left.flatten_tree_inorder())
+        lst.append(self.value)
+        if hasattr(self, 'right'):
+            lst.append(self.right.flatten_tree_inorder())
+        return lst
+
+    def flatten_tree_postorder(self):
+        lst = []
+        if hasattr(self, 'left'):
+            lst.append(self.left.flatten_tree_postorder())
+        if hasattr(self, 'right'):
+            lst.append(self.right.flatten_tree_postorder())
+        lst.append(self.value)
+        return lst
+
+    def flatten_tree_levelorder(self):
+        lst = [self.value]
+        q = []
+        if hasattr(self, 'left') and not self.left.checked:
+            self.left.checked = True
+            q.append(self.left)
+        if hasattr(self, 'right') and not self.right.checked:
+            self.right.checked = True
+            q.append(self.right)
+        while q:
+            node = q.pop(0)
+            lst.append(node.value)
+            if hasattr(node, 'left') and not node.left.checked:
+                node.left.checked = True
+                q.append(node.left)
+            if hasattr(node, 'right') and not node.right.checked:
+                node.right.checked = True
+                q.append(node.right)
+        return lst
+
     #TODO: Reimplement for graphs - doesn't give us much for trees
     def is_path_to(self, target):
         if self.value == target.value:
@@ -57,11 +113,15 @@ class GraphNode:
 
     def print_graph_breadth_first(self):
         print self.value
-        q = Queue.Queue()
+        items = []
+        self.marked = True
+        items.append(self) 
 
+        while items is not None:
+            print item.value
+             
 
     def graph_to_list_closure(self,lst=[]):
-        #Closure likely isn't needed but is this a violation of any practice/standard? 
         def graph_to_list_depth_first(node):
             lst.append(node.value)
             node.marked = True
@@ -76,13 +136,23 @@ class GraphNode:
         return lst
 
 #Build you a tree
+#       5
+#      / \
+#     3   4
+#      \
+#       2
+#      / \
+#     0   1
 t0 = TreeNode(0,None, None)
 t1 = TreeNode(1,None, None)
 t2 = TreeNode(2, t0, t1)
 t3 = TreeNode(3, None, t2)
 t4 = TreeNode(4, None, None)
 t5 = TreeNode(5, t3, t4)
-#t5.print_tree_preorder()
+assert [5,3,2,0,1,4] == flatten_list(t5.flatten_tree_preorder())
+assert [3,0,2,1,5,4] == flatten_list(t5.flatten_tree_inorder())
+assert [0,1,2,3,4,5] == flatten_list(t5.flatten_tree_postorder())
+assert [5, 3, 4, 2, 0, 1] == flatten_list(t5.flatten_tree_levelorder())
 
 #Build you a graph
 g0 = GraphNode(0, [])
@@ -92,5 +162,6 @@ g3 = GraphNode(3, [g2])
 g4 = GraphNode(4, [g0])
 g5 = GraphNode(5, [g3, g4])
 g1.left = g5
-print g5.print_graph_depth_first()
+#print g5.print_graph_depth_first()
+#print g5.print_graph_breadth_first()
 #print g5.graph_to_list_closure([])
