@@ -1,5 +1,5 @@
 # Given an amount of money and a list of coin values, return the least number of coins required to add up to the total.
-# Also known as the knapsack problem
+# Also known as the unbounded knapsack problem
 # Author: J. Plasmier | jplasmeier@gmail.com
 # MIT License
 
@@ -12,7 +12,6 @@ def make_change(total, coins, count=None):
         return count + 1
     for coin in reversed(sorted(coins)):
         if coin < total and total-coin > 0:
-            print coin, total-coin
             return make_change(total-coin, coins, count + 1)
     
 
@@ -28,7 +27,6 @@ def make_change_dp(total, coins, change=None, cache=None):
         change.append(total)
         return change
     for coin in reversed(sorted(coins)):
-        print cache
         if total in cache:
             print 'we hit the cache, isn\'t DP cool??'
             return change.extend(cache[total])

@@ -3,6 +3,7 @@
 # J. Plasmeier | jplasmeier@gmail.com
 # MIT License
 
+import copy
 import Queue
 
 def flatten_list(to_flat):
@@ -153,6 +154,29 @@ assert [5,3,2,0,1,4] == flatten_list(t5.flatten_tree_preorder())
 assert [3,0,2,1,5,4] == flatten_list(t5.flatten_tree_inorder())
 assert [0,1,2,3,4,5] == flatten_list(t5.flatten_tree_postorder())
 assert [5, 3, 4, 2, 0, 1] == flatten_list(t5.flatten_tree_levelorder())
+
+def tree_to_list_of_lists(root):
+    list_of_lists = []
+    current = []
+    if (root is not None):
+        current.append(root)
+    while len(current) > 0:
+        list_of_lists.append(current)
+        parents = copy.deepcopy(current)
+        current = []
+        for node in parents:
+            if hasattr(node, 'left'):
+                current.append(node.left)
+            if hasattr(node, 'right'):
+                current.append(node.right)
+    return list_of_lists
+
+lol = tree_to_list_of_lists(t5)
+for l in lol:
+    print '['
+    for t in l:
+        print '[', t.value, ']'
+    print ']'
 
 #Build you a graph
 g0 = GraphNode(0, [])
